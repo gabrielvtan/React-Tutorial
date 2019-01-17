@@ -6,7 +6,10 @@ const userInput = (props) => {
     return (
         <div className="UserInput">
             <p>Enter a new Username:  
-            <input type ="text" onChange={props.changed} value={props.username}/>
+                <input 
+                    type ="text" 
+                    onChange={props.changed} 
+                    value={props.currentName}/>
             </p>
         </div>
     )

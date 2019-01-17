@@ -42,6 +42,15 @@ class App extends Component {
   }
 
   render() {
+    // This is in-line css -> use this when you want to scope the style
+    const style ={
+        backgroundColor: 'white',
+        font: 'inherit',
+        border: '1x solid blue',
+        padding: '8px',
+        cursor: 'pointer'
+    };
+
     return (
     // Must always use 'className' instead of 'class' for labeling components
     // good practice to wrap everything within a given root element you are returning
@@ -55,7 +64,9 @@ class App extends Component {
         {/* you can use the bind(this, list) in order to bind input to the new name (i.e. passing an arugment)*/}
         {/* <button onClick={this.switchNameHandler.bind(this, 'Gabriel')}>Switch Name</button> */}
         {/* You may also use the construction below, however, it is not the most efficient way to create the click method */}
-        <button onClick={() =>this.switchNameHandler('Gabriel!!!!')}>Switch Name</button>
+        <button 
+            style = {style}
+            onClick={() =>this.switchNameHandler('Gabriel!!!!')}>Switch Name</button>
         {/* This is customized HTML tag with a self closing back slash */}
         {/* You can access state by using this.state.persons[n].name */}
         <Person 
