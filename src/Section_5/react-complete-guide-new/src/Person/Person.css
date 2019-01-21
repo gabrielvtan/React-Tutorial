@@ -10,8 +10,8 @@
 }
 
 /* We can also use Radium to do media queries */
-/* @media (min-width: 500px) {
+@media (min-width: 500px) {
     .Person {
         width: 450px;
     }
-} */
+}

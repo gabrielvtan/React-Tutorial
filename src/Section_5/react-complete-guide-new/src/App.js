@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import './App.css';
-
+// This is how you use the CSS loader to import specific classes within the App.css file
+import classes from './App.css';
 import Person from './Person/Person';
 
 
@@ -54,16 +54,10 @@ class App extends Component {
   }
   
   render() {
-    const style ={
-        backgroundColor: 'green',
-        color:'white',
-        font: 'inherit',
-        border: '1x solid blue',
-        padding: '8px',
-        cursor: 'pointer',
-    };
-
     let persons = null;
+    // Get a btnClass to set to null to change the toggle color
+    let btnClass = '';
+
 
     if (this.state.showPersons) {
         persons = (
@@ -78,23 +72,26 @@ class App extends Component {
             })}
         </div>
         );
-        style.backgroundColor = 'red';
+        // need to add btnClass within the if statement
+        btnClass = classes.Red;
     }
 
-    const classes = [];
+    // Because of the CSS modules we no longer need to pass in strings but rathers classes.red
+    const assignedClasses = [];
     if (this.state.persons.length <=2) {
-        classes.push('red'); // classes = ['red']
+        assignedClasses.push( classes.red ); // classes = ['red']
     }
     if (this.state.persons.length <= 1) {
-        classes.push('bold'); // ['red','bold']
+        assignedClasses.push( classes.bold ); // ['red','bold']
     }
 
     return (
-      <div className="App">
+      <div className={classes.App}>
         <h1>Hi, I'm a React App </h1>
-        <p className={classes.join(' ')}> This is really working</p>
+        <p className={assignedClasses.join(' ')}> This is really working</p>
+        {/* Here we add className to change the color of the buttons */}
         <button 
-            style = {style}
+            className = {btnClass}
             onClick={this.togglePersonsHandler}>Toggle Persons</button>
         {persons}
       </div>
