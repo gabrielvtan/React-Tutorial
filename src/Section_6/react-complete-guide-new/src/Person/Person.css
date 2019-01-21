@@ -1,0 +1,17 @@
+/* Note that this is global CSS code that is NOT scoped to the Person.js file */
+
+.Person {
+    width: 60%;
+    margin: 16px auto; /* this centers the text*/
+    border: 1px solid #eee;
+    box-shadow: 0 2px 3px #ccc;
+    padding: 16px;
+    text-align: center;
+}
+
+/* We can also use Radium to do media queries */
+@media (min-width: 500px) {
+    .Person {
+        width: 450px;
+    }
+}
