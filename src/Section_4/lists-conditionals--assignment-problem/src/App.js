@@ -38,6 +38,7 @@ class App extends Component {
           <li>When you click a CharComponent, it should be removed from the entered text.</li>
         </ol>
         <p>Hint: Keep in mind that JavaScript strings are basically arrays!</p>
+        <hr />
         <input 
             type="text" 
             onChange={this.inputChangedHandler}

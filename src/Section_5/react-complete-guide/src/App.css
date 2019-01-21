@@ -1,0 +1,14 @@
+.App {
+  text-align: center;
+}
+
+/* Here we introduce a new class to be applied within the app - color text red depending on the number of persons in the list*/
+.red {
+    color: red;
+}
+
+/* Here we changed the style class when there is only one person left in the list */
+.bold {
+    font-weight: bold;
+}
+
