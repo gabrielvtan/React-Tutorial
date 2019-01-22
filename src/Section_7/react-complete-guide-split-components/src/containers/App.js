@@ -6,16 +6,53 @@ import Cockpit from '../components/Cockpit/Cockpit';
 // When creating components, always try to be lean and break up the components and the containers
 // Also try to have as little as possible within the return and render function
 
+// As a reminder, Stateful(Containers) uses the syntax 'class XY extends Component'
+// they give you access to State and Lifecycle Hooks - should only be used to manage these
+// You access state and props via "this"
+// this.state.XY & this.props.XY
+
+// Stateless containers use the syntax 'const XY = (props) => {...}
+// you don't have access to State and Lifecycle Hooks - should be used in all other classes
+// Access Props via "props"
+// props.XY
+
 class App extends Component {
-  state = {
-      persons: [
-          {id: 'ddsf', name: 'Gabby', age: 27},
-          {id: 'kljsa', name: 'Andrew', age: 100},
-          {id: 'dsfv', name: 'Oswald', age: 50}
-      ],
-      otherState: 'some other value',
-      showPersons: false 
+  // Here we add the constructor and must include super(props) in order to access the props -this is a lifestyle hook
+  constructor(props) {
+      super(props);
+      console.log('[App.js] Inside Constructor', props)
+      // this is how we include state into the constructor, this is how it was done in older React versions - it is not as efficient as 
+      // including state outside the constructor    
+      this.state = {
+        persons: [
+            {id: 'ddsf', name: 'Gabby', age: 27},
+            {id: 'kljsa', name: 'Andrew', age: 100},
+            {id: 'dsfv', name: 'Oswald', age: 50}
+        ],
+        otherState: 'some other value',
+        showPersons: false 
+    };
   }
+
+  // the following are other Lifestyle Hooks
+  componentWillMount() {
+      console.log('[App.js] Inside componentWillMount()');
+  }
+
+  componentDidMount(){
+      console.log('[App.js] inside componentDidMount');
+  }
+
+  // this is the more modetn way of putting in elements of a state
+//   state = {
+//       persons: [
+//           {id: 'ddsf', name: 'Gabby', age: 27},
+//           {id: 'kljsa', name: 'Andrew', age: 100},
+//           {id: 'dsfv', name: 'Oswald', age: 50}
+//       ],
+//       otherState: 'some other value',
+//       showPersons: false 
+//   }
 
   switchNameHandler = (newName) => {
     this.setState({
@@ -56,8 +93,8 @@ class App extends Component {
   }
   
   render() {
+    console.log('[App.js] inside render()')
     let persons = null;
-
 
     // Here we are changing the format of the render function to be easier to read
     if (this.state.showPersons) {
@@ -69,9 +106,11 @@ class App extends Component {
 
     // In this example, we bind a given method within App.js to a specific variable 
     // this variable references a specific functional component that is imported into App
+    // Though we never used props, we are given access to it through this.props.title, and that is how we access other components in the index.js file
     return (
       <div className={classes.App}>
         <Cockpit 
+            appTitle={this.props.title}
             showPersons={this.state.showPersons} 
             persons={this.state.persons}
             clicked={this.togglePersonsHandler}/>
