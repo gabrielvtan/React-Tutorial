@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import classes from './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
@@ -16,7 +16,7 @@ import Cockpit from '../components/Cockpit/Cockpit';
 // Access Props via "props"
 // props.XY
 
-class App extends Component {
+class App extends PureComponent {
   // Here we add the constructor and must include super(props) in order to access the props -this is a lifestyle hook
   constructor(props) {
       super(props);
@@ -42,6 +42,26 @@ class App extends Component {
   componentDidMount(){
       console.log('[App.js] inside componentDidMount');
   }
+
+  
+//   shouldComponentUpdate(nextProps, nextState) {
+//     console.log('[UPDATE App.js] Inside shouldComponentUpdate', nextProps, nextState);
+//     // this method returns either true or false and thus either continues or discontinues the UPDATE
+//     // here we only want to continue if nextProps.persons is not equal to the old persons
+//     // similar to Perons.js - we have control the re-rendering of the DOM by checking the state elements
+//     // Checking if state or props have changed is a good case practice for control flow and application efficiency 
+//     return nextState.persons !== this.state.persons ||
+//         nextState.showPersons !== this.state.showPersons;
+//   }
+
+  componentWillUpdate (nextProps, nextState) {
+        console.log('[UPDATE App.js] Inside componentWillUpdate', nextProps, nextState);
+  }
+
+  componentDidUpdate () {
+        console.log('[UPDATE App.js] Inside componentDidUpdate');
+  }
+
 
   // this is the more modetn way of putting in elements of a state
 //   state = {
@@ -109,6 +129,7 @@ class App extends Component {
     // Though we never used props, we are given access to it through this.props.title, and that is how we access other components in the index.js file
     return (
       <div className={classes.App}>
+        <button onClick={() => {this.setState({showPersons:true})}}>Show Persons</button>
         <Cockpit 
             appTitle={this.props.title}
             showPersons={this.state.showPersons} 
