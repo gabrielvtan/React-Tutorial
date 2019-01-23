@@ -9,6 +9,7 @@ class Person extends Component {
     constructor( props ) {
         super( props );
         console.log( '[Person.js] Inside Constructor', props );
+        // this method is new with 16.3 - this creates a reference to a specific element
         this.inputElement = React.createRef();
     }
 
@@ -16,6 +17,7 @@ class Person extends Component {
         console.log( '[Person.js] Inside componentWillMount()' );
     }
 
+    // this.inputElement.current.focus() must now be used with the new React.createRef()
     componentDidMount () {
         console.log( '[Person.js] Inside componentDidMount()' );
         if ( this.props.position === 0 ) {
@@ -33,6 +35,7 @@ class Person extends Component {
             <Aux>
                 <p onClick={this.props.click}>I'm {this.props.name} and I am {this.props.age} years old!</p>
                 <p>{this.props.children}</p>
+                {/* the value of ref can be changed to this.inputElement */}
                 <input
                     ref={this.inputElement}
                     type="text"

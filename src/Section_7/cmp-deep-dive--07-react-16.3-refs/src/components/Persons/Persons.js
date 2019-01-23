@@ -6,6 +6,7 @@ class Persons extends PureComponent {
     constructor( props ) {
         super( props );
         console.log( '[Persons.js] Inside Constructor', props );
+        // this allows use to reference the last person selected
         this.lastPersonRef = React.createRef();
     }
 
@@ -15,6 +16,7 @@ class Persons extends PureComponent {
 
     componentDidMount () {
         console.log( '[Persons.js] Inside componentDidMount()' );
+        // focus is a method in the Person.js file
         this.lastPersonRef.current.focus();
     }
 

@@ -19,6 +19,7 @@ const withClass = (WrappedComponent, className) => {
         }
     }
 
+    // this allows us to take a function as an argument - returning our hoc with the updated reference
     return React.forwardRef((props, ref) => {
         return <WithClass {...props} forwardedRef={ref} />
     });
