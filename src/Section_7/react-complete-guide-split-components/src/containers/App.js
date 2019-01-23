@@ -2,6 +2,10 @@ import React, { PureComponent } from 'react';
 import classes from './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
+import Aux from '../hoc/Aux';
+
+// Since withClass is not a component, a lower case letter should be used. It is simply a JS method which will wrap the app later
+import withClass from '../hoc/withClass';
 
 // When creating components, always try to be lean and break up the components and the containers
 // Also try to have as little as possible within the return and render function
@@ -15,6 +19,8 @@ import Cockpit from '../components/Cockpit/Cockpit';
 // you don't have access to State and Lifecycle Hooks - should be used in all other classes
 // Access Props via "props"
 // props.XY
+
+// YOU should only use PureComponents if you know updates may not be required or if updates only require 1 or 2 props
 
 class App extends PureComponent {
   // Here we add the constructor and must include super(props) in order to access the props -this is a lifestyle hook
@@ -30,7 +36,8 @@ class App extends PureComponent {
             {id: 'dsfv', name: 'Oswald', age: 50}
         ],
         otherState: 'some other value',
-        showPersons: false 
+        showPersons: false,
+        toggleClicked: 0
     };
   }
 
@@ -107,11 +114,20 @@ class App extends PureComponent {
     this.setState({persons: persons});
   }
 
+  // As a reminder, setState should be used whenever you create copies of a given array so that you don't overwrite the original
+  // In this example, we use setState with an arrow function in order to change the array count on how many times toggle was clicked
   togglePersonsHandler = () => {
     const doesShow = this.state.showPersons;
-    this.setState({showPersons: !doesShow});
+    this.setState( (prevState, props) => {
+        return {
+            showPersons: !doesShow, 
+            toggleClicked: prevState.toggleClicked + 1
+        }
+    });
   }
   
+  // render() doesn't necessarily update the DOM, it should only do so when checks such as shouldComponentUpdate() get passed 
+  // Accessing the real DOM requires a lot of resources so it should only be rendered whenever there are real changes to the DOM
   render() {
     console.log('[App.js] inside render()')
     let persons = null;
@@ -127,8 +143,9 @@ class App extends PureComponent {
     // In this example, we bind a given method within App.js to a specific variable 
     // this variable references a specific functional component that is imported into App
     // Though we never used props, we are given access to it through this.props.title, and that is how we access other components in the index.js file
+    // we now update component to include the hoc WithClass so that we can remove the div tags
     return (
-      <div className={classes.App}>
+      <Aux>
         <button onClick={() => {this.setState({showPersons:true})}}>Show Persons</button>
         <Cockpit 
             appTitle={this.props.title}
@@ -136,9 +153,9 @@ class App extends PureComponent {
             persons={this.state.persons}
             clicked={this.togglePersonsHandler}/>
         {persons}
-      </div>
+      </Aux>
     );
   }
 }
 
-export default App;
+export default withClass(App, classes.App);

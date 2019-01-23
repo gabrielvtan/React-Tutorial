@@ -6,7 +6,8 @@
     font-weight: bold;
 }
 
-.Cockpit button {
+/* We don't really need the cockpit clas so we can change the classes to simply Button */
+.Button {
     border: 1x solid blue;
     padding: 16px;
     background-color: green;
@@ -15,16 +16,16 @@
     cursor: pointer;
 }
 
-.Cockpit button:hover {
+.Button:hover {
     background-color: lightgreen;
     color: black;
 }
 
-.Cockpit button.Red {
+.Button.Red {
     background-color: red;
 }
 
-.Cockpit button.Red:hover {
+.Button.Red:hover {
     background-color: salmon;
     color:black;
 }
