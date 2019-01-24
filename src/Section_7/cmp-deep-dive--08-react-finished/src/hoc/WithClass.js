@@ -19,8 +19,6 @@ const withClass = (WrappedComponent, className) => {
         }
     }
 
-    // this allows us to take a function as an argument - returning our hoc with the updated reference
-    // here we are creating a direct connection between the parent the child component which will ignore other HOC 
     return React.forwardRef((props, ref) => {
         return <WithClass {...props} forwardedRef={ref} />
     });

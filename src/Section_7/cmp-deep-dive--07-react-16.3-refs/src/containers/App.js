@@ -6,6 +6,9 @@ import Cockpit from '../components/Cockpit/Cockpit';
 import Aux from '../hoc/Aux';
 import withClass from '../hoc/WithClass';
 
+// this is new with 16.3 which allows us to easily access authentication through React.createContext
+export const AuthContext = React.createContext(false);
+
 class App extends PureComponent {
   constructor( props ) {
     super( props );
@@ -18,7 +21,8 @@ class App extends PureComponent {
       ],
       otherState: 'some other value',
       showPersons: false,
-      toggleClicked: 0
+      toggleClicked: 0,
+      authenticated: false
     };
   }
 
@@ -26,6 +30,7 @@ class App extends PureComponent {
     console.log( '[App.js] Inside componentWillMount()' );
   }
 
+  // this is discouraged because they often are used incorrectly and often causes mistakes
   componentDidMount () {
     console.log( '[App.js] Inside componentDidMount()' );
   }
@@ -36,8 +41,23 @@ class App extends PureComponent {
   //     nextState.showPersons !== this.state.showPersons;
   // }
 
+  // this is discouraged because they often are used incorrectly and often causes mistakes
+  // componentWillReceiveProps is also discouraged for the reason above
   componentWillUpdate ( nextProps, nextState ) {
     console.log( '[UPDATE App.js] Inside componentWillUpdate', nextProps, nextState );
+  }
+
+  // this lifecycle hook gets executed whenever your props are updated and gives you a chance to update the state with props
+  // however your state should rarely be coupled with the props - if they need to be combined, this should be used
+  static getDerivedStateFromProps(nextProps, prevState) {
+    console.log( '[UPDATE App.js] Inside getDerivedStateFromProp', nextProps, prevState );
+    return prevState;
+  }
+
+  // gets you a snapshot of the DOM prior to the update of the page
+  // this is useful for saving the position on the page for a given user
+  getSnapshotBeforeUpdate() {
+    console.log( '[UPDATE App.js] Inside getSnapshotBeforeUpdate');
   }
 
   componentDidUpdate () {
@@ -90,6 +110,10 @@ class App extends PureComponent {
     } );
   }
 
+  loginHandler = () =>{
+    this.setState({authenticated:true});
+  }
+
   render () {
     console.log( '[App.js] Inside render()' );
     let persons = null;
@@ -108,8 +132,12 @@ class App extends PureComponent {
           appTitle={this.props.title}
           showPersons={this.state.showPersons}
           persons={this.state.persons}
-          clicked={this.togglePersonsHandler} />
-        {persons}
+          login={this.loginHandler}
+          clicked={this.togglePersonsHandler} 
+        />
+          <AuthContext.Provider value={this.state.authenticated}> 
+              {persons} 
+          </AuthContext.Provider>
       </Aux>
     );
     // return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Does this work now?'));
