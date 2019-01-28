@@ -83,6 +83,16 @@ class BurgerBuilder extends Component {
         this.setState({purchasing:true});
     }
 
+    // Now we create a purchaseCancelHandler to hide the modal whenever we click on the backdrop of the page
+    purchaseCancelHandler = () => {
+        this.setState({purchasing:false});
+    }
+
+    // Now we create a purchase continue handler to for paying for the burger order
+    purchaseContinueHandler = () => {
+        alert('You Continue!');
+    }
+
     render () {
         const disabledInfo = {
             ...this.state.ingredients
@@ -94,8 +104,13 @@ class BurgerBuilder extends Component {
             <Aux>
                 {/* The Modal here will be used to display the burger order summary */}
                 {/* We add some additional styling to Modal for the CSS animation to work  */}
-                <Modal show={this.state.purchasing}> 
-                    <OrderSummary ingredients={this.state.ingredients}/>
+                <Modal show={this.state.purchasing}
+                    modalClosed={this.purchaseCancelHandler}> 
+                    <OrderSummary 
+                        ingredients={this.state.ingredients}
+                        price={this.state.totalPrice}
+                        purchaseCancelled={this.purchaseCancelHandler}
+                        purchaseContinued={this.purchaseContinueHandler}/>
                 </Modal>
                 <Burger ingredients={this.state.ingredients}/>
                 {/* Here we then add the ingredients to the BuildControls */}
