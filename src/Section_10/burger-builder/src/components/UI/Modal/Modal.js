@@ -12,8 +12,9 @@ import Backdrop from '../Backdrop/Backdrop';
 class Modal extends Component {
 
     // by adding this, we increase the efficiency of the app because it is no longer unnecessarily re-rendering unless the modal is updated
+    // we also have to slightly change this so that the component also updates for the props.children as well since the spinner is a children
     shouldComponentUpdate (nextProps, nextState) {
-        return nextProps.show !== this.props.show;
+        return nextProps.show !== this.props.show || nextProps.children !== this.props.children;
     }
 
     componentWillUpdate() {
