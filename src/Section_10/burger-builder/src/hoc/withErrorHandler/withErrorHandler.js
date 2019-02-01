@@ -18,13 +18,23 @@ const withErrorHandler = (WrappedComponent, axios) => {
             // here we use another interceptor for request, but again like response, we are not interested in the request, but rather
             // we are interested in calling this setstate and clear any errors so that whenever I send the request I don't have the error 
             // set up anymore - it is cleared from the state
-            axios.interceptors.request.use(req => {
+            // we also have to create a reference to the interceptor and create a new properties for the class by using this.reqInterceptor -> we now
+            // are able to use these properties in componentWillUnmount()
+           this.reqInterceptor = axios.interceptors.request.use(req => {
                 this.setState({error: null});
                 return req;
             })
-            axios.interceptors.response.use(res => res, error => {
+            this.resInterceptor = axios.interceptors.response.use(res => res, error => {
                 this.setState({error: error});
             });
+        }
+
+        // whenever we start to use withErrorHandler in multiple containers, it will create unused interceptors which will take up memory
+        // so we have to use componentWillUnmount() in order to clear the unused interceptors from memory
+        componentWillUnmount () {
+            console.log('Will Unmount', this.reqInterceptor, this.resInterceptor);
+            axios.interceptors.request.eject(this.reqInterceptor);
+            axios.interceptors.request.eject(this.resInterceptor);
         }
 
         errorConfirmedHandler = () => {
