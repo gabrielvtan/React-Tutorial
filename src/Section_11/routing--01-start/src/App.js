@@ -7,7 +7,9 @@ class App extends Component {
   render() {
     return (
       // Here we wrap the entire blog in the BrowserRouter so that we can now add different url paths
-      <BrowserRouter>
+      // basename is a props that lets you set a default route
+      //<BrowserRouter basename="/">
+      <BrowserRouter basename="/">
         <div className="App">
             <Blog />
         </div>
