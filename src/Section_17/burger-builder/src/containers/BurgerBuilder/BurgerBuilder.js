@@ -8,9 +8,8 @@ import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import * as actions from '../../store/actions/index';
 import axios from '../../axios-orders';
-import * as actionTypes from '../../store/actions';
-
 
 
 // we include the totalPrice and purchasable states here to set the base price of the burger and to set whether the burger is purchasable
@@ -21,23 +20,16 @@ import * as actionTypes from '../../store/actions';
 class BurgerBuilder extends Component {
     state = {
         // totalPrice: 4, WE NO LONGER NEED THIS BC WE ARE PASSING THE DATA THROUGH THE REDUCER 
-        purchasable: false,
-        purchasing: false,
-        loading: false,
-        error: false
+
+        purchasing: false
+
     }
 
     // here we will include the componentDidMount() in order to pull the ingredients from the database
     componentDidMount () {
         console.log(this.props);
-        // we shall commment this out for now and move the logic to the reducer - since we don't know how to do asynchronous code 
-        // axios.get('https://burgerbuilder-a39e5.firebaseio.com/ingredients.json')
-        //     .then(response => {
-        //         this.setState({ingredients: response.data})
-        //     })
-        //     .catch(error => {
-        //         this.setState({error: true})
-        //     });
+        // since we moved the axios request to the burger builder action file 
+        this.props.onInitIngredients();
     }
 
     
@@ -103,22 +95,8 @@ class BurgerBuilder extends Component {
 
     // Now we create a purchase continue handler to for paying for the burger order
     purchaseContinueHandler = () => {
-        
-        // WE CAN NOW REMOVE QUERY PARAMS AS WE WILL NOW BE MANAGING THESE INGREDIENTS WITHIN REDUX 
-        // here we are setting up our own queryParams to make the ingredients pass through the burgerbuilder to checkout 
-        // encodeURIComponent is a react method which simply encodes the elements such that they can be used in the URL 
-        // const queryParams = [];
-        // for (let i in this.state.ingredients) {
-        //     queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
-        // }
-        // // SINCE we moved the contact data code, we will now include the total price as something to pass along with the burger ingredients
-        // queryParams.push('price=' + this.state.totalPrice);
-
-        // // we will now join this array of strings 
-        // const queryString = queryParams.join('&');
-    
-        // instead of sending the order to firebase, here we navigated the page to /checkout 
-        // WE NOW SHORTEN THIS AS WE NO LONGER NEED QUERY PARAMS
+        // Here we will include the onInitPurchase to handle the redirect of the order success 
+        this.props.onInitPurchase();
         this.props.history.push('/checkout');
     }
 
@@ -134,7 +112,7 @@ class BurgerBuilder extends Component {
 
         // Here we have to first set Burger as the Spinner for default as the ingredients have not been retrieved from the server just yet
         // if there is an error connecting to the server then show error message, otherwise, show the spinner
-        let burger = this.state.error? <p>Ingredients can't be loaded</p> : <Spinner />
+        let burger = this.props.error? <p>Ingredients can't be loaded</p> : <Spinner />
 
         if (this.props.ings) {
             burger = (
@@ -160,10 +138,7 @@ class BurgerBuilder extends Component {
                 purchaseCancelled={this.purchaseCancelHandler}
                 purchaseContinued={this.purchaseContinueHandler}/>
         }
-            // We now add a conditional check to see if the page is loading for the spinner
-            if (this.state.loading){
-                orderSummary = <Spinner />;
-            }
+
 
         return (
             <Aux>
@@ -181,17 +156,21 @@ class BurgerBuilder extends Component {
 }
 
 // we have to now include price a State to be mapped to Props 
+// Now that we have combined reducers - we need to make sure that we have the correct path for each of the properties 
 const mapStateToProps = state => {
     return {
-        ings: state.ingredients,
-        price: state.totalPrice
+        ings: state.burgerBuilder.ingredients,
+        price: state.burgerBuilder.totalPrice,
+        error: state.burgerBuilder.error
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return{
-        onIngredientAdded: (ingName) =>  dispatch({type:actionTypes.ADD_INGREDIENT, ingredientName: ingName}),
-        onIngredientRemoved: (ingName) =>  dispatch({type:actionTypes.REMOVE_INGREDIENT, ingredientName: ingName})
+        onIngredientAdded: (ingName) =>  dispatch(actions.addIngredient(ingName)),
+        onIngredientRemoved: (ingName) =>  dispatch(actions.removeIngredient(ingName)),
+        onInitIngredients: () => dispatch(actions.initIngredients()),
+        onInitPurchase: () => dispatch(actions.purchaseInit())
     };
 };
 

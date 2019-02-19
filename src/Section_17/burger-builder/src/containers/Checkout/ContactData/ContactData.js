@@ -6,6 +6,8 @@ import Spinner from '../../../components/UI/Spinner/Spinner';
 import classes from './ContactData.css';
 import axios from '../../../axios-orders';
 import Input from '../../../components/UI/Input/Input';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+import * as actions from '../../../store/actions/index';
 
 // we now include the actual contact data to save for a given order form 
 // we now have to include an elementType property for each element 
@@ -97,8 +99,7 @@ class ContactData extends Component {
                 valid: true
             }
         },
-        formIsValid: false,
-        loading: false
+        formIsValid: false
     }
 
 
@@ -106,10 +107,6 @@ class ContactData extends Component {
     orderHandler = (event) => {
         // we need to include event.prevenDefault() in order to prevent a server request and thus reloading the page 
         event.preventDefault();
-        // WE NOW MOVED THIS SECTION FROM BURGER BUILDER TO HANDLE CONTACT INFORMATION
-        // Here we now have to change the state of loading for the spinner 
-        this.setState({loading: true})
-        // alert('You Continue!');
 
         // here we now create a new variable so that we can map the name of a given input to a given value 
         // since dont care about elementType or config we simply map the keys to a given value 
@@ -127,16 +124,10 @@ class ContactData extends Component {
             price: this.props.price,
             orderData: formData
         }
-        // once the order is loaded or an error occurs, set the loading and purchasing states back to false in order to close the modal 
-        axios.post('/orders.json', order)
-            .then(response => {
-                this.setState({loading: false});
-                // Here we redirect the page after the order button is clicked 
-                this.props.history.push('/');
-            })
-            .catch(error => {
-                this.setState({loading: false});
-            });
+
+        // REDUX - now we have to include the action for ordering the Burger. Remember to use props 
+        this.props.onOrderBurger(order);
+
     }
 
     // Here we now create a method to handle checking the validity of a given form 
@@ -226,7 +217,7 @@ class ContactData extends Component {
                 <Button btnType="Success" disabled={!this.state.formIsValid}>ORDER</Button>
                 </form>
         );
-        if (this.state.loading) {
+        if (this.props.loading) {
             form = <Spinner/>;
         }
         return (
@@ -238,11 +229,20 @@ class ContactData extends Component {
     }
 }
 
+// Here we use two different reducers when mapping state to props 
 const mapStateToProps = state => {
     return {
-        ings: state.ingredients,
-        price: state.totalPrice
+        ings: state.burgerBuilder.ingredients,
+        price: state.burgerBuilder.totalPrice,
+        loading: state.order.loading
     }
-}
+};
 
-export default connect(mapStateToProps)(ContactData);
+const mapDispatchToProps = dispatch => {
+    // as a reminder, the dispatchToProps has to be returned as a JS object 
+    return {
+        onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));
