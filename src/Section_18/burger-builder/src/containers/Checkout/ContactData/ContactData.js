@@ -118,10 +118,12 @@ class ContactData extends Component {
         // however in a real app, you would calculate the price on the server because you don't want the user to manipulate the price 
         // order then is the 2nd argument for axios bc it will be the data that is passed to the server
         // we now also include orderData to inlcude the delivery information in a given order
+        // HERE we now include the userId as part of the order so that we can associate specific orders with specific users 
         const order = {
             ingredients: this.props.ings,
             price: this.props.price,
-            orderData: formData
+            orderData: formData,
+            userId: this.props.userId
         }
 
         // REDUX - now we have to include the action for ordering the Burger. Remember to use props 
@@ -239,13 +241,14 @@ class ContactData extends Component {
     }
 }
 
-// Here we use two different reducers when mapping state to props 
+// Here we use three different reducers when mapping state to props 
 const mapStateToProps = state => {
     return {
         ings: state.burgerBuilder.ingredients,
         price: state.burgerBuilder.totalPrice,
         loading: state.order.loading,
-        token: state.auth.token
+        token: state.auth.token,
+        userId: state.auth.userId
     }
 };
 

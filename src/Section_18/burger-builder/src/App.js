@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Layout from './hoc/Layout/Layout';
@@ -17,28 +17,55 @@ class App extends Component {
   } 
 
   render() {
+    // Here we will create the logic for the guard routes which holds jsx 
+    // Here we set the default routes which unautherized users may access without logging in 
+    // we have to add the switch statement because of adjacent tags 
+    let routes = (
+        <Switch>
+            <Route path="/auth" component={Auth}/>
+            <Route path="/" exact component={BurgerBuilder}/>
+            {/* Here we also add a default redirect path when an unautherized routes requested */}
+            <Redirect to="/"/>
+        </Switch>
+    );
+    
+    // Here we add the routes that are accessible for an authenticated user 
+    if (this.props.isAuthenticated) {
+        routes = (
+            <Switch>
+                <Route path="/checkout" component={Checkout} />
+                <Route path="/orders" component={Orders} />
+                <Route path="/logout" component={Logout}/>
+                <Route path="/" exact component={BurgerBuilder}/>
+                {/* Here we also add a default redirect path when an unautherized routes requested */}
+                <Redirect to="/"/>
+            </Switch>
+        );
+    }
+
     return (
       <div>
         <Layout>
-            <Switch>
-            <Route path="/checkout" component={Checkout} />
-            <Route path="/orders" component={Orders} />
-            <Route path="/auth" component={Auth}/>
-            <Route path="/logout" component={Logout}/>
-            <Route path="/" exact component={BurgerBuilder}/>
-            </Switch>
+            {routes}
         </Layout>
       </div>
     );
   }
 }
 
-// Here we will be adding MapDispatchToProps in order to check the authentication status of the user 
+// HERE we will now create guards which will prevent the user from manually accessesing unautherized pages 
+const mapStateToProps = state => {
+    return {
+        isAuthenticated: state.auth.token !== null
+    }
+}
 
-const MapDispatchToProps = dispatch => {
+
+// Here we will be adding MapDispatchToProps in order to check the authentication status of the user 
+const mapDispatchToProps = dispatch => {
     return {
         onTryAutoSignUp: () => dispatch(actions.authCheckState())
     };
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

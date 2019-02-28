@@ -26,6 +26,7 @@ export const purchaseBurgerStart = () => {
 
 // this is an asynchronous action creator which doesn't need a specific action type 
 // HERE we also have to pass the AUTH token when we make a burger order 
+// NOW we add the logic of displaying only user specific orders - which will be included in orderData
 export const purchaseBurger = (orderData, token) => {
     return dispatch => {
         //Here we initiate purchaseBurgerStart with dispatch so that the action returned by purchaseBurgerStart is dispatched to the store
@@ -73,10 +74,13 @@ export const fetchOrdersStart = () => {
 // HERE we will now work on creating protected routes for the burger orders
 // Here we simply need to pass the token we got from firebase when authenticating
 // All we have to do for authorization is add a query param to the endpoint and pass the token 
-export const fetchOrders = (token) => {
+// WE ARE NOW going to add additional query params in order to pass the userId so that only their orders show up 
+// &orderBy is a firebase specific search parameter
+export const fetchOrders = (token, userId) => {
     return dispatch => {
         dispatch(fetchOrdersStart());
-        axios.get('/orders.json?auth=' + token)
+        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
+        axios.get('/orders.json' + queryParams)
         .then(res => {
             const fetchedOrders = [];
             for (let key in res.data) {
