@@ -1,0 +1,19 @@
+
+/* list-style of none will get added to an unorder list so dont want default list style */
+/* display: flex aligns the list items with one another */
+.NavigationItems {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-flow:column;
+    align-items: center;
+    height: 100%;
+}
+
+@media (min-width: 500px) {
+    .NavigationItems {
+        flex-flow: row;
+
+    }
+}

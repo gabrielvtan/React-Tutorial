@@ -1,0 +1,37 @@
+/* Here we set up the CSS to first fit mobile devices then make it fit for a computer screen */
+/* display: flex - makes sure that the elements are positioned beside one another */
+/* flex has a property justify-content where you can select the space between elements */
+/* first element is padding is top and bottom, second is left and right */
+/* box-sizing to make sure the toolbar is sized correctly  */
+/* z-index has to be a number lower than the backdrop because the backdrop should go above the toolbar*/
+
+.Toolbar {
+    height: 56px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left:0; 
+    background-color: #703B09;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 90; 
+}
+
+/* This sets the CSS for the nav items to displayed whenever selected in the toolbar */
+.Toolbar nav {
+    height: 100%;
+}
+
+.Logo {
+    height: 80%;
+}
+
+/* Sets it up so that only one nav bar is displayed on mobile devices */
+@media (max-width: 499px) {
+    .DesktopOnly {
+        display: none;
+    }
+}

@@ -1,0 +1,17 @@
+/* This styling will do the following:
+- take the full height and width of the page
+- fixed position even as we scroll 
+- a set index so that it is above the elements we want it to sit above
+- position in the top left corner 
+- background color of 50 transparency
+
+*/
+.Backdrop {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 100;
+    left:0;
+    top: 0;
+    background-color: rgba(0,0,0,0.5);
+}

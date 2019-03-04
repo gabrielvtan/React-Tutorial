@@ -54,7 +54,7 @@ class App extends Component {
     return (
     // Must always use 'className' instead of 'class' for labeling components
     // good practice to wrap everything within a given root element you are returning
-    // Keep in mind that is isn't HTML code, but JS
+    // Keep in mind that is isn't HTML code, but JSX
       <div className="App">
         <h1>Hi, I'm a React App </h1>
         <p> This is really working</p>
